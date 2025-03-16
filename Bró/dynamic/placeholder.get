@@ -1,0 +1,5 @@
+@bot.hybrid_command(name = "github-connection", with_app_command = True, description = "Interagovat s agentem")
+@app_commands.guilds(GUILD)
+async def gh-c(ctx: commands.Context, id:int):
+    my_embed = discord.Embed(title=f"Github Dynamic Commands Connection is success", color=0x00FF00)
+    await ctx.reply(embed=my_embed)
